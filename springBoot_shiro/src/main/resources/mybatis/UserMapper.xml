@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tc.dao.UserMapper" >
+    <insert id="register" parameterType="user">
+        insert into user values(null,#{username},#{password},#{salt});
+    </insert>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultType="user">
+        select * from user where username=#{username};
+    </select>
+<!--    查询角色-->
+    <select id="getRolesByUserId" resultType="string" parameterType="integer">
+            SELECT r.rname
+                FROM user u
+                LEFT JOIN user_role ur
+                ON u.id = ur.userID
+                LEFT JOIN role r
+                ON r.rid = ur.roleID
+                WHERE u.id=#{id};
+    </select>
+<!--    查询角色操作-->
+    <select id="getPremByUserId" resultType="string" parameterType="integer">
+        SELECT p.pName
+            FROM user u
+            LEFT JOIN user_role ur
+            ON u.id = ur.userID
+            LEFT JOIN role r
+            ON r.rid = ur.roleID
+            LEFT JOIN role_perm rm
+            ON r.rid = rm.roleID
+            LEFT JOIN perm p
+            ON p.id = rm.permID
+            WHERE u.id=#{id};
+    </select>
+</mapper>
